@@ -1,4 +1,5 @@
-
+#define RX_PIN 3
+#define TX_PIN 4
 
 #define COLOR_PFEFFI 0, 255, 0
 #define COLOR_JAEGERMEISTER 255, 110, 0
