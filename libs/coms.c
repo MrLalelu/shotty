@@ -2,9 +2,9 @@
 
 char state = 'n';
 
-bool read_is_open() {
-    while Serial.available() > 0 {
-        state = Serial.read()
+bool read_is_open(SoftwareSerial * ser) {
+    while ser->available() > 0 {
+        state = ser->read()
     }
     if state == 'y' {
         return true;
@@ -12,10 +12,10 @@ bool read_is_open() {
     return false;
 }
 
-void send_is_open(bool is_open) {
+void send_is_open(SoftwareSerial * ser, bool is_open) {
     if is_open {
-        Serial.write('y');
+        ser->write('y');
         return;
     }
-    Serial.write('n');
+    ser->write('n');
 }
