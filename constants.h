@@ -1,0 +1,7 @@
+
+
+#define COLOR_PFEFFI 0, 255, 0
+#define COLOR_JAEGERMEISTER 255, 110, 0
+#define COLOR_ROTER 255, 0, 0
+#define COLOR_SAURER 209, 255, 228
+#define COLOR_BLAU 0, 0, 255

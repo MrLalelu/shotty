@@ -2,16 +2,13 @@
 #include <Adafruit_NeoPixel.h>
 #include <stdlib.h>
 
+#include "constants.h"
+#include "coms.h"
+
 #define PFEFFI 0
 #define JAEGERMEISTER 1
 #define ROTER 2
 #define SAURER 3
-
-#define COLOR_PFEFFI 0, 255, 0
-#define COLOR_JAEGERMEISTER 255, 110, 0
-#define COLOR_ROTER 255, 0, 0
-#define COLOR_SAURER 209, 255, 228
-#define COLOR_BLAU 0, 0, 255
 
 #define DRAW1 PFEFFI            // left to right
 #define DRAW2 JAEGERMEISTER
