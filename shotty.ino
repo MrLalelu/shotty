@@ -145,7 +145,7 @@ void loop() {
     for (int i = 0; i < NUM_LEDS_INSIDE; i++) {
         pixels_inside.setPixelColor(i, 0, 255, 0);
     }
-    // reading weather a drawer is open. Read NUM_READS to get rid of noise
+    // reading whether a drawer is open. Read NUM_READS to get rid of noise
     for (int i = 0; i < NUM_DRAWS; i++) {
         draw_open_count[i] = 0;
     }
