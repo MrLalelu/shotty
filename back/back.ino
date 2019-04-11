@@ -97,9 +97,11 @@ void delete_dimmed_pixel_loop(Adafruit_NeoPixel * pix, int len_stripe, int i_pix
         pix->setPixelColor((i_pix + i) % len_stripe, 0, 0, 0);
     }*/
 }
- 
+
+SoftwareSerial ser(RX_PIN, TX_PIN);
+
 void setup() {
-    Serial.begin(9600);
+    ser.begin(BAUD);
     // defining which liqur is in which draw
     for (int i = 0; i < NUM_DRAWS; i++) {
         pinMode(pins_draws[i], INPUT);
@@ -129,7 +131,7 @@ float int_g = 0.;
 float int_b = 0.;
  
 void loop() {
-    any_draw_open = read_is_open();
+    any_draw_open = read_is_open(&ser);
 
     // if a draw is open set the backlight color to the color of the chosen
     // liqour and iluminate the draw (last 6 leds on the inside strip)
