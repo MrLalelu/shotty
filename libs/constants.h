@@ -2,6 +2,8 @@
 #define TX_PIN 4
 #define BAUD 9600
 
+#define NUM_COLORS 5
+
 #define COLOR_PFEFFI 0, 255, 0
 #define COLOR_JAEGERMEISTER 255, 110, 0
 #define COLOR_ROTER 255, 0, 0

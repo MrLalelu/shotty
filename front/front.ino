@@ -1,8 +1,10 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 #include <stdlib.h>
-#include "../libs/coms.h"
+#include <SoftwareSerial.h>
 
+#include "libs/coms.h"
+#include "libs/constants.h"
 #define PFEFFI 0
 #define JAEGERMEISTER 1
 #define ROTER 2
@@ -43,8 +45,8 @@
 // wareSerial mySerial(10, 11); // RX, TX
 
 // defining colors for the different liquors
-// uint8_t colors[NUM_COLORS][3] = {{COLOR_PFEFFI}};//, {COLOR_JAEGERMEISTER},
-                                 //{COLOR_ROTER}, {COLOR_SAURER}, {COLOR_BLAU}};
+uint8_t colors[NUM_COLORS][3] = {{COLOR_PFEFFI}, {COLOR_JAEGERMEISTER},
+                                 {COLOR_ROTER}, {COLOR_SAURER}, {COLOR_BLAU}};
 
 int draws[NUM_DRAWS] = {DRAW1, DRAW2, DRAW3, DRAW4, DRAW5, DRAW6};
 int pins_draws[NUM_DRAWS] = {PIN_BUTTON_DRAW1, PIN_BUTTON_DRAW2, PIN_BUTTON_DRAW3,
@@ -55,15 +57,17 @@ float draw_open_count[NUM_DRAWS];
 bool any_draw_open;
 int key_draw_open;
 
+long last_time_send = 0;
+
 
 Adafruit_NeoPixel pixels_inside =
     Adafruit_NeoPixel(NUM_LEDS_INSIDE, PIN_INSIDE, NEO_GRB + NEO_KHZ800);
-
+SoftwareSerial ser(RX_PIN, TX_PIN);
 
 
 
 void setup() {
-    Serial.begin(9600);
+    ser.begin(BAUD);
     // defining which liqur is in which draw
     for (int i = 0; i < NUM_DRAWS; i++) {
         pinMode(pins_draws[i], INPUT);
@@ -92,11 +96,7 @@ void loop() {
             draw_open_count[i] += digitalRead(pins_draws[i]);
         }
         draw_open[i] = draw_open_count[i] / NUM_READS > OPEN_THRESHOLD;
-        Serial.print(draw_open_count[i] / NUM_READS);
-        Serial.print(" ");
     }
-    Serial.println("");
-    delay(1000);
     any_draw_open = false;
 
     for(int i = 0; i < NUM_DRAWS; i++) {
@@ -107,18 +107,26 @@ void loop() {
         }
     }
 
+    if (millis() - last_time_send > 10) {
+        send_is_open(&ser, any_draw_open);
+        last_time_send = millis();
+    }
+
     // if a draw is open set the backlight color to the color of the chosen
     // liqour and iluminate the draw (last 6 leds on the inside strip)
     if (any_draw_open) {
-      
-
-      
-        pixels_inside.show();
-
         
+
+        for (int i = 0; i < NUM_LEDS_INSIDE; i++) {
+            pixels_inside.setPixelColor(i, colors[key_draw_open][0],
+                                           colors[key_draw_open][1],
+                                           colors[key_draw_open][2]);
+        }
     }
     else{
-      
+        for (int i = 0; i < NUM_LEDS_INSIDE; i++) {
+            pixels_inside.setPixelColor(i, COLOR_PFEFFI);
+        }
     }
 
 

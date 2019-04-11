@@ -2,8 +2,8 @@
 #include <Adafruit_NeoPixel.h>
 #include <stdlib.h>
 
-#include "constants.h"
-#include "coms.h"
+#include "libs/constants.h"
+#include "libs/coms.h"
 
 #define PFEFFI 0
 #define JAEGERMEISTER 1
@@ -38,8 +38,6 @@
 #define DELAY_RUNNING_MAX 15   // the min time in millis between two effect
                                 // steps in the running effect
 
-#define NUM_COLORS 1
-
 // defining colors for the different liquors
 uint8_t colors[NUM_COLORS][3] = {{COLOR_PFEFFI}, {COLOR_JAEGERMEISTER},
                                  {COLOR_ROTER}, {COLOR_SAURER}, {COLOR_BLAU}};
@@ -50,8 +48,6 @@ int pins_draws[NUM_DRAWS] = {PIN_BUTTON_DRAW1, PIN_BUTTON_DRAW2, PIN_BUTTON_DRAW
 
 Adafruit_NeoPixel pixels_backlight =
     Adafruit_NeoPixel(NUM_LEDS_BACKLIGHT, PIN_BACKLIGHT, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel pixels_inside =
-    Adafruit_NeoPixel(NUM_LEDS_INSIDE, PIN_INSIDE, NEO_GRB + NEO_KHZ800);
 
 
 void add_dimmed_pixel_loop(Adafruit_NeoPixel * pix, int len_stripe, int i_pix, uint8_t r, uint8_t g, uint8_t b) {
