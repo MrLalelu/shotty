@@ -10,12 +10,12 @@
 #define ROTER 2
 #define SAURER 3
 
-#define DRAW1 PFEFFI            // left to right
-#define DRAW2 JAEGERMEISTER
-#define DRAW3 ROTER
-#define DRAW4 ROTER
-#define DRAW5 PFEFFI
-#define DRAW6 SAURER
+#define DRAW1 SAURER            // left to right
+#define DRAW2 PFEFFI
+#define DRAW3 JAEGERMEISTER
+#define DRAW4 PFEFFI
+#define DRAW5 SAURER
+#define DRAW6 PFEFFI
 
 #define NUM_DRAWS 6
 #define NUM_READS 25
@@ -98,10 +98,7 @@ SoftwareSerial ser(RX_PIN, TX_PIN);
 
 void setup() {
     ser.begin(BAUD);
-    // defining which liqur is in which draw
-    for (int i = 0; i < NUM_DRAWS; i++) {
-        pinMode(pins_draws[i], INPUT);
-    }
+    Serial.begin(9600);
     pixels_backlight.begin();
     pixels_backlight.show();
 
@@ -125,9 +122,37 @@ bool eff_downwards = false;
 float int_r = 0.;
 float int_g = 0.;
 float int_b = 0.;
+long last = 0;
  
 void loop() {
-    any_draw_open = read_is_open(&ser);
+    key_draw_open = read_is_open(&ser);
+    any_draw_open = key_draw_open >= 0;
+    /*if (millis() - last > 100) {
+        if (any_draw_open) {
+            if (key_draw_open == 0) {
+                Serial.write("0");
+            }
+            if (key_draw_open == 1) {
+                Serial.write("1");
+            }
+            if (key_draw_open == 2) {
+                Serial.write("2");
+            }
+            if (key_draw_open == 3) {
+                Serial.write("3");
+            }
+            if (key_draw_open == 4) {
+                Serial.write("4");
+            }
+            if (key_draw_open == 5) {
+                Serial.write("5");
+            }
+        }
+        else {
+            Serial.write('n');
+        }
+        last = millis();
+    }*/
 
     // if a draw is open set the backlight color to the color of the chosen
     // liqour and iluminate the draw (last 6 leds on the inside strip)

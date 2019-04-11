@@ -1,21 +1,63 @@
 #include "coms.h"
 
-char state = 'n';
+int state = -1;
 
-bool read_is_open(SoftwareSerial * ser) {
+int read_is_open(SoftwareSerial * ser) {
+    char get;
+    bool did_read = false;
     while (ser->available() > 0) {
-        state = ser->read();
+        get = ser->read();
+        did_read = true;
+        Serial.write(get);
     }
-    if (state == 'y') {
-        return true;
+    if (did_read) {
+        if (get == '0') {
+            state = -1;
+        }
+        if (get == '1') {
+            state = 0;
+        }
+        if (get == '2') {
+            state = 1;
+        }
+        if (get == '3') {
+            state = 2;
+        }
+        if (get == '4') {
+            state = 3;
+        }
+        if (get == '5') {
+            state = 4;
+        }
+        if (get == '6') {
+            state = 5;
+        }
     }
-    return false;
+    return state;
 }
 
-void send_is_open(SoftwareSerial * ser, bool is_open) {
-    if (is_open) {
-        ser->write('y');
-        return;
+void send_is_open(SoftwareSerial * ser, int state) {
+    if (state == 0) {
+        ser->write('1');
     }
-    ser->write('n');
+    if (state == 1) {
+        ser->write('2');
+    }
+    if (state == 2) {
+        ser->write('3');
+    }
+    if (state == 3) {
+        ser->write('4');
+    }
+    if (state == 4) {
+        ser->write('5');
+    }
+    if (state == 5) {
+        ser->write('6');
+    }
+    else {
+        ser->write('0');
+    }
+
+    ser->write(state);
 }

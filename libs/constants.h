@@ -1,5 +1,6 @@
+// red - 2  orange - 3
 #define RX_PIN 3
-#define TX_PIN 4
+#define TX_PIN 2
 #define BAUD 9600
 
 #define NUM_COLORS 5

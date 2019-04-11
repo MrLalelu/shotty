@@ -16,12 +16,12 @@
 #define COLOR_SAURER 209, 255, 228
 #define COLOR_BLAU 0, 0, 255
 
-#define DRAW1 PFEFFI            // left to right
-#define DRAW2 JAEGERMEISTER
-#define DRAW3 ROTER
-#define DRAW4 ROTER
-#define DRAW5 PFEFFI
-#define DRAW6 SAURER
+#define DRAW1 SAURER            // left to right
+#define DRAW2 PFEFFI
+#define DRAW3 JAEGERMEISTER
+#define DRAW4 PFEFFI
+#define DRAW5 SAURER
+#define DRAW6 PFEFFI
 
 #define NUM_DRAWS 6
 #define NUM_READS 25
@@ -51,6 +51,10 @@ uint8_t colors[NUM_COLORS][3] = {{COLOR_PFEFFI}, {COLOR_JAEGERMEISTER},
 int draws[NUM_DRAWS] = {DRAW1, DRAW2, DRAW3, DRAW4, DRAW5, DRAW6};
 int pins_draws[NUM_DRAWS] = {PIN_BUTTON_DRAW1, PIN_BUTTON_DRAW2, PIN_BUTTON_DRAW3,
                             PIN_BUTTON_DRAW4, PIN_BUTTON_DRAW5, PIN_BUTTON_DRAW6};
+
+uint8_t colors_by_draw[NUM_DRAWS][3] = {{COLOR_SAURER}, {COLOR_PFEFFI},
+                                        {COLOR_JAEGERMEISTER}, {COLOR_PFEFFI},
+                                        {COLOR_SAURER}, {COLOR_PFEFFI}};
 
 bool draw_open[NUM_DRAWS];
 float draw_open_count[NUM_DRAWS];
@@ -86,11 +90,11 @@ void setup() {
 
 void loop() {
     // reading whether a drawer is open. Read NUM_READS to get rid of noise
-    for (int i = 0; i < NUM_DRAWS; i++) {
+    for (int i = 1; i < NUM_DRAWS; i++) {
         draw_open_count[i] = 0;
     }
 
-    for (int i = 0; i < NUM_DRAWS; i++) {
+    for (int i = 1; i < NUM_DRAWS; i++) {
         draw_open_count[i] = 0;
         for(int i2 = 0; i2 < NUM_READS; i2++) {
             draw_open_count[i] += digitalRead(pins_draws[i]);
@@ -99,7 +103,7 @@ void loop() {
     }
     any_draw_open = false;
 
-    for(int i = 0; i < NUM_DRAWS; i++) {
+    for(int i = 1; i < NUM_DRAWS; i++) {
         if (draw_open[i]) {    //TODO remove not after testing!!!
             any_draw_open = true;
             key_draw_open = i;
@@ -108,7 +112,12 @@ void loop() {
     }
 
     if (millis() - last_time_send > 10) {
-        send_is_open(&ser, any_draw_open);
+        if (any_draw_open) {
+            send_is_open(&ser, -1);
+        }
+        else {
+            send_is_open(&ser, key_draw_open);
+        }
         last_time_send = millis();
     }
 
@@ -118,14 +127,14 @@ void loop() {
         
 
         for (int i = 0; i < NUM_LEDS_INSIDE; i++) {
-            pixels_inside.setPixelColor(i, colors[key_draw_open][0],
-                                           colors[key_draw_open][1],
-                                           colors[key_draw_open][2]);
+            pixels_inside.setPixelColor(i, colors_by_draw[key_draw_open][0],
+                                           colors_by_draw[key_draw_open][1],
+                                           colors_by_draw[key_draw_open][2]);
         }
     }
     else{
         for (int i = 0; i < NUM_LEDS_INSIDE; i++) {
-            pixels_inside.setPixelColor(i, COLOR_PFEFFI);
+            pixels_inside.setPixelColor(i, COLOR_BLAU);
         }
     }
 
